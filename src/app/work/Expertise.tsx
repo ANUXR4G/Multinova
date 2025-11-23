@@ -14,10 +14,8 @@ interface ExpertiseCategory {
   expertises: string[]
 }
 
-// Custom useMatchMedia hook
 const useMatchMedia = (query: string): boolean => {
   const [matches, setMatches] = useState(false)
-
   useEffect(() => {
     if (typeof window === 'undefined') return
     const mediaQuery = window.matchMedia(query)
@@ -26,11 +24,9 @@ const useMatchMedia = (query: string): boolean => {
     mediaQuery.addEventListener('change', handleChange)
     return () => mediaQuery.removeEventListener('change', handleChange)
   }, [query])
-
   return matches
 }
 
-// Cross icon component
 const IconCross = ({ className, color }: { className?: string; color?: string }) => (
   <svg
     className={className}
@@ -109,7 +105,6 @@ const Expertise = () => {
     if (isMobile || !containerRef.current || !lineRef.current) return
 
     const ctx = gsap.context(() => {
-      // Title character animation
       if (titleRef.current) {
         const chars = titleRef.current.querySelectorAll('.char')
         gsap.fromTo(
@@ -130,9 +125,7 @@ const Expertise = () => {
         )
       }
 
-      // Main pinned section with scrub
       const totalHeight = window.innerHeight * (categories.length + 1)
-
       const mainTimeline = gsap.timeline({
         scrollTrigger: {
           trigger: containerRef.current,
@@ -142,16 +135,12 @@ const Expertise = () => {
           scrub: 1,
           onUpdate: (self) => {
             const progress = self.progress
-            const percentage = Math.round(progress * 100)
-            setScrollPercentage(percentage)
-
+            setScrollPercentage(Math.round(progress * 100))
             const newIndex = Math.min(
               Math.floor(progress * categories.length),
               categories.length - 1
             )
             setActiveIndex(newIndex)
-
-            // Calculate which expertise item should be highlighted
             const currentCategory = categories[newIndex]
             const categoryProgress = (progress * categories.length) % 1
             const expertiseIndex = Math.min(
@@ -163,14 +152,13 @@ const Expertise = () => {
         }
       })
 
-      // Animate the progress line growing through each category
+      // Single progress line animation
       mainTimeline.to(progressLineRef.current, {
         height: '100%',
         duration: 1,
         ease: 'none'
       }, 0)
 
-      // Animate the percentage text
       if (percentageRef.current) {
         mainTimeline.to(percentageRef.current, {
           opacity: 1,
@@ -179,14 +167,12 @@ const Expertise = () => {
         }, 0.05)
       }
 
-      // Animate each category title
+      // Categories highlighting
       categories.forEach((_, index) => {
         const categoryEl = document.querySelector(`[data-category="${index}"]`)
         if (!categoryEl) return
-
         const startProgress = index / categories.length
         const endProgress = (index + 1) / categories.length
-
         mainTimeline.to(
           categoryEl,
           {
@@ -197,7 +183,6 @@ const Expertise = () => {
           },
           startProgress
         )
-
         if (index < categories.length - 1) {
           mainTimeline.to(
             categoryEl,
@@ -212,31 +197,28 @@ const Expertise = () => {
         }
       })
 
-      // Animate each expertise item within each category
+      // Domains highlighting with custom color
       categories.forEach((category, catIndex) => {
         category.expertises.forEach((_, expIndex) => {
           const expertiseEl = document.querySelector(
             `[data-expertise="${catIndex}-${expIndex}"]`
           )
           if (!expertiseEl) return
-
           const categoryStart = catIndex / categories.length
           const categoryDuration = 1 / categories.length
           const expertiseStart = categoryStart + (expIndex / category.expertises.length) * categoryDuration
           const expertiseEnd = categoryStart + ((expIndex + 1) / category.expertises.length) * categoryDuration
-
           mainTimeline.to(
             expertiseEl,
             {
-              color: '#ffffff',
+              color: '#b0a3ff',
               fontWeight: 400,
-              scale: 1.05,
+              scale: 1.07,
               duration: 0.05,
               ease: 'none'
             },
             expertiseStart
           )
-
           if (expIndex < category.expertises.length - 1) {
             mainTimeline.to(
               expertiseEl,
@@ -266,11 +248,9 @@ const Expertise = () => {
   return (
     <>
       <section className="relative flex flex-col overflow-hidden px-8 py-24">
-        
-        {/* Animated Title */}
         <h1 
           ref={titleRef}
-          className="relative w-fit text-white text-5xl md:text-7xl lg:text-8xl font-bold mb-16 overflow-hidden"
+          className="relative w-fit text-[#b0a3ff] text-5xl md:text-7xl lg:text-8xl font-bold mb-16 overflow-hidden"
         >
           {titleText.split('').map((char, index) => (
             <span key={index} className="char inline-block">
@@ -282,8 +262,6 @@ const Expertise = () => {
             color="#ed356d" 
           />
         </h1>
-
-        {/* Desktop View - 3 Column Layout */}
         {!isMobile ? (
           <>
             <div 
@@ -306,7 +284,6 @@ const Expertise = () => {
                   </div>
                 ))}
               </div>
-
               {/* CENTER - Image */}
               <div className="flex items-center justify-center">
                 <AnimatePresence mode="wait">
@@ -329,7 +306,6 @@ const Expertise = () => {
                   </motion.div>
                 </AnimatePresence>
               </div>
-
               {/* RIGHT - Domains/Expertise List with Progress Line */}
               <div className="relative pl-8">
                 <div className="space-y-3">
@@ -339,29 +315,28 @@ const Expertise = () => {
                       data-expertise={`${activeIndex}-${index}`}
                       className="text-xl xl:text-2xl font-light transition-all duration-300 cursor-pointer py-2"
                       style={{
-                        color: activeExpertiseIndex === index ? '#ffffff' : '#9ca3af',
+                        color: activeExpertiseIndex === index ? '#b0a3ff' : '#9ca3af',
                         fontWeight: activeExpertiseIndex === index ? 400 : 300,
-                        transform: activeExpertiseIndex === index ? 'scale(1.05)' : 'scale(1)'
+                        transform: activeExpertiseIndex === index ? 'scale(1.07)' : 'scale(1)'
                       }}
                     >
                       {expertise}
                     </div>
                   ))}
                 </div>
-
-                {/* Vertical Progress Line */}
+                {/* Single Vertical Progress Line */}
                 <div 
                   ref={lineRef}
                   className="absolute right-0 top-0 w-[2px] h-full bg-gray-800"
                 >
                   <div
                     ref={progressLineRef}
-                    className="absolute top-0 left-0 w-full h-0 bg-gradient-to-b from-[#ed356d] to-[#ed356d]/80"
+                    className="absolute top-0 left-0 w-full h-0 bg-[#b0a3ff]"
                   >
                     {/* Dynamic Percentage */}
                     <div 
                       ref={percentageRef}
-                      className="absolute -right-14 text-[#ed356d] text-sm font-bold whitespace-nowrap opacity-0"
+                      className="absolute -right-14 text-[#b0a3ff] text-sm font-bold whitespace-nowrap opacity-0"
                       style={{ 
                         top: scrollPercentage > 50 ? '50%' : `${scrollPercentage}%`,
                         transform: 'translateY(-50%)'
@@ -373,12 +348,9 @@ const Expertise = () => {
                 </div>
               </div>
             </div>
-            
-            {/* Spacer for scroll */}
             <div style={{ height: `${window.innerHeight * (categories.length + 1)}px` }} />
           </>
         ) : (
-          /* Mobile View */
           <div className="space-y-8">
             {categories.map((category, index) => (
               <motion.div
@@ -393,11 +365,10 @@ const Expertise = () => {
                   onClick={() => setExpandedIndex(expandedIndex === index ? null : index)}
                   className="w-full text-left"
                 >
-                  <h3 className="text-2xl font-light text-white mb-4">
+                  <h3 className="text-2xl font-light text-[#b0a3ff] mb-4">
                     {category.title}
                   </h3>
                 </button>
-
                 <motion.div
                   initial={false}
                   animate={{
@@ -416,12 +387,11 @@ const Expertise = () => {
                         className="object-cover"
                       />
                     </div>
-
                     <div className="space-y-3">
                       {category.expertises.map((expertise) => (
                         <div
                           key={expertise}
-                          className="text-lg font-light text-gray-400"
+                          className="text-lg font-light text-[#b0a3ff]"
                         >
                           {expertise}
                         </div>

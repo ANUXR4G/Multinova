@@ -22,7 +22,7 @@ export default function Header() {
           {' '}
           Work{' '}
         </Link>
-        <Link href="#about" className="px-6 py-3 hover:text-white">
+        <Link href="/about" className="px-6 py-3 hover:text-white">
           {' '}
           About{' '}
         </Link>
