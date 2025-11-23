@@ -285,7 +285,7 @@ export default function Orb({
       
       {/* Centered Text */}
       <div className="relative z-10 pointer-events-none">
-        <h1 className="text-[8rem] sm:text-[10rem] md:text-[12rem] lg:text-[15rem] text-white tracking-tighter leading-none select-none text-center">
+        <h1 className="text-[8rem] sm:text-[10rem] md:text-[12rem] lg:text-[15rem] text-white leading-none select-none text-center">
           About Us
         </h1>
       </div>
