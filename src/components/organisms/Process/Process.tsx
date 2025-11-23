@@ -13,31 +13,10 @@ const StepNumber = ({ step }: { step: string }) => {
         duration: 0.8,
         ease: [0.25, 0.4, 0.25, 1]
       }}
-      className="rounded-[26px] py-3 bg-[#0c070c] px-2 text-white font-medium text-[20px] block"
+      className="rounded-full py-3 bg-[#0c070c] px-4 text-white font-medium text-[20px] block z-10 relative"
     >
       {step}
     </motion.span>
-  )
-}
-
-const VerticalLine = () => {
-  const lineRef = useRef(null)
-  
-  return (
-    <div className="relative h-[150px] md:h-[400px] w-[2px]">
-      <div className="h-full bg-black w-[2px]"></div>
-      <motion.div
-        ref={lineRef}
-        initial={{ height: 0 }}
-        whileInView={{ height: '100%' }}
-        viewport={{ once: true, margin: "-100px" }}
-        transition={{ 
-          duration: 1.2,
-          ease: [0.25, 0.4, 0.25, 1]
-        }}
-        className="absolute top-0 left-0 bg-[#0c070c] w-[2px]"
-      ></motion.div>
-    </div>
   )
 }
 
@@ -94,6 +73,15 @@ const TextReveal = ({ text, className }: { text: string, className?: string }) =
 }
 
 const Process = () => {
+  const lineContainerRef = useRef(null)
+  
+  const { scrollYProgress } = useScroll({
+    target: lineContainerRef,
+    offset: ['start 0.7', 'end 0.3']
+  })
+
+  const lineHeight = useTransform(scrollYProgress, [0, 1], ['0%', '100%'])
+
   return (
     <section className="py-16 lg:py-36 bg-white rounded-[32px] w-11/12 m-auto">
       <main className="pl-[5%] m-auto space-y-20 lg:space-y-40">
@@ -109,13 +97,25 @@ const Process = () => {
         </h1>
         <div className="flex justify-between text-black relative">
           <div className="lg:w-1/2 flex gap-4 lg:gap-16 h-fit z-20">
-            <div className="flex flex-col items-center text-black">
+            {/* Single continuous line container */}
+            <div ref={lineContainerRef} className="flex flex-col items-center text-black relative">
+              {/* Background line */}
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[2px] h-full bg-gray-300"></div>
+              
+              {/* Animated progress line */}
+              <motion.div
+                style={{ height: lineHeight }}
+                className="absolute top-0 left-1/2 -translate-x-1/2 w-[2px] bg-[#0c070c] origin-top"
+              ></motion.div>
+
+              {/* Step numbers positioned over the line */}
               <StepNumber step={'01'} />
-              <VerticalLine />
+              <div className="h-[150px] md:h-[400px]"></div>
               <StepNumber step={'02'} />
-              <VerticalLine />
+              <div className="h-[150px] md:h-[400px]"></div>
               <StepNumber step={'03'} />
             </div>
+
             <div className="flex justify-between items-stretch flex-col -my-2">
               <span className="h-[210px] lg:h-[450px]">
                 <motion.h3 
