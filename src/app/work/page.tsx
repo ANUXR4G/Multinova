@@ -4,6 +4,7 @@ import Footer from '@/components/organisms/Footer/Footer'
 import React from 'react'
 import Hyperspeed from './Hyperspeed'
 import Expertise from './Expertise';
+import Portfolio from './portfolio';
 
 function Page() {
   return (
@@ -50,8 +51,8 @@ function Page() {
   }}
 />
 
-<Expertise />
-
+        <Expertise />
+        <Portfolio />
         <Footer />
     </div>
   )
