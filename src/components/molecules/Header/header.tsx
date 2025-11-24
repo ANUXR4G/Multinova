@@ -33,7 +33,7 @@ export default function Header() {
       </nav>
       <Link href="/contact">
       <div className="flex gap-2 items-center">
-        <Button className="glassBackground px-4 sm:px-6 py-3 rounded-lg items-center text-sm text-white font-semibold hover:text-black hover:bg-primaryGreen flex gap-1 transition-all">
+        <Button className="glassBackground px-4 sm:px-6 py-3 items-center text-sm text-white font-semibold hover:text-black hover:bg-primaryGreen flex gap-1 transition-all rounded-xl">
           <>
             <span className="hidden sm:inline">✦ </span>{' '}
             <span>Contact &nbsp;Us </span>
