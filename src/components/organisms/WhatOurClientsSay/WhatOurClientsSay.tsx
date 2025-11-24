@@ -1,7 +1,14 @@
 'use client'
 import React, { useRef } from 'react'
 import Image from 'next/image'
-import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
+import { motion, useScroll, useTransform, useSpring, MotionValue } from 'framer-motion'
+
+// Add interface for Word component props
+interface WordProps {
+  children: string
+  range: [number, number]
+  progress: MotionValue<number>
+}
 
 const WhatOurClientsSay = () => {
   const containerRef = useRef(null)
@@ -88,7 +95,7 @@ const WhatOurClientsSay = () => {
 }
 
 // Word component with smoother animations
-const Word = ({ children, range, progress }) => {
+const Word = ({ children, range, progress }: WordProps) => {
   const opacity = useTransform(progress, range, [0.15, 1])
   const y = useTransform(progress, range, [10, 0])
   

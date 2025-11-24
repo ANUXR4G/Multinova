@@ -1,14 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  transpilePackages: ["ogl", "postprocessing"],
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
-  typescript: {
-    ignoreBuildErrors: true,
-  },
+  transpilePackages: ["ogl","postprocessing"],
   images: {
-    unoptimized: true,
     remotePatterns: [
       {
         protocol: 'https',
@@ -24,4 +17,4 @@ const nextConfig = {
   },
 };
 
-export default nextConfig;
+module.exports = nextConfig;

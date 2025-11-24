@@ -6,7 +6,10 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Image from 'next/image'
 
-gsap.registerPlugin(ScrollTrigger)
+// Conditionally register GSAP plugin only on client
+if (typeof window !== 'undefined') {
+  gsap.registerPlugin(ScrollTrigger)
+}
 
 interface ExpertiseCategory {
   title: string
@@ -54,6 +57,7 @@ const Expertise = () => {
   const [activeExpertiseIndex, setActiveExpertiseIndex] = useState(0)
   const [scrollPercentage, setScrollPercentage] = useState(0)
   const [expandedIndex, setExpandedIndex] = useState<number | null>(0)
+  const [spacerHeight, setSpacerHeight] = useState(0)
   
   const isMobile = useMatchMedia('(max-width: 1024px)')
 
@@ -101,8 +105,15 @@ const Expertise = () => {
     }
   ]
 
+  // Set spacer height in useEffect
   useEffect(() => {
-    if (isMobile || !containerRef.current || !lineRef.current) return
+    if (typeof window !== 'undefined' && !isMobile) {
+      setSpacerHeight(window.innerHeight * (categories.length + 1))
+    }
+  }, [isMobile, categories.length])
+
+  useEffect(() => {
+    if (isMobile || !containerRef.current || !lineRef.current || typeof window === 'undefined') return
 
     const ctx = gsap.context(() => {
       if (titleRef.current) {
@@ -348,7 +359,7 @@ const Expertise = () => {
                 </div>
               </div>
             </div>
-            <div style={{ height: `${window.innerHeight * (categories.length + 1)}px` }} />
+            {spacerHeight > 0 && <div style={{ height: `${spacerHeight}px` }} />}
           </>
         ) : (
           <div className="space-y-8">
